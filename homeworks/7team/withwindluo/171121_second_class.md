@@ -15,8 +15,8 @@
 |:----:|:---:|:---:|:-----:|
 |[二进制数]b|[八进制数]q|[十进制数]d|0[十六进制数]h|
 |[二进制数]B|[八进制数]Q|[十进制数]D|0[十六进制数]H|
-|\|[二进制数]o|\|\|
-|\|[二进制数]O|\|\|
+|\\|[二进制数]o|\\|\\|
+|\\|[二进制数]O|\\|\\|
 
 
 ## 简单指令
@@ -31,60 +31,60 @@
 #### MOV指令（move的缩写）
 该指令可以将数据发送到寄存器中。
  mov `源操作数`,`目的操作数`;
-`mov reg32,(reg32,imm8,imm16,imm32)`
-`mov reg16,(reg16,imm8,imm16)`
-`mov reg 8,(reg8,imm8)`
+`mov reg32,(reg32,imm8,imm16,imm32)`  
+`mov reg16,(reg16,imm8,imm16)`  
+`mov reg 8,(reg8,imm8)`  
 
 例子：
-mov EAX,1234H;
-mov EAX,EBX;
+mov EAX,1234H;  
+mov EAX,EBX;  
 
 #### xchg指令
-`xchg reg32,reg32`
-`xchg reg16,reg16`
-`xchg reg8,reg8`
+`xchg reg32,reg32`  
+`xchg reg16,reg16`  
+`xchg reg8,reg8`  
 
 例如`xchg eax,ecx`表示将eax与ecx的数值进行交换。
 
 #### 递增（减）指令
-`inc reg(8,16,32)`
-`dec reg(8,16,32)`
+`inc reg(8,16,32)`   
+`dec reg(8,16,32)`  
 
 #### add/sub指令
-`add/sub reg32,reg32/imm(8,16,32)`
-`add/sub reg16,reg16/imm(8,16)`
-`add/sub reg8,reg8/imm(8)`
+`add/sub reg32,reg32/imm(8,16,32)`  
+`add/sub reg16,reg16/imm(8,16)`  
+`add/sub reg8,reg8/imm(8)`  
 将寄存器的数值与另一寄存器或者立即数相加，并存回原来的寄存器中。
 
 #### lea指令
 目的地址传送指令：将一个近地址的指针写入到指定的寄存器。(获取内存编号)
-如：`lea reg16,mem16`
-`lea eax,dword ptr ds:[ESP]`
+如：`lea reg16,mem16`  
+`lea eax,dword ptr ds:[ESP]`  
 
 #### rep、stos指令
-- rep 按计数寄存器(ECX)中指定的次数重复执行字符串指令
-- stos 将AL/AX/EAX的值存储到[EDI]指定的内存单元
-`stos byte ptr es:[edi]`  简写STOSB
-`stos word ptr es:[edi]`  简写STOSW
-`stos dword ptr es:[edi]` 简写STOSD
-rep可配合stos使用，用于堆栈的操作。
-- rep能够引发其后的字符串指令被重复，只要ECX不为0，重复就继续。
-每一次执行字符串指令之后，ECX的值都会减小。
-- 标志寄存器D位可以改变EDI的增长方向：DF为0则加，DF为1则减。
+- rep 按计数寄存器(ECX)中指定的次数重复执行字符串指令  
+- stos 将AL/AX/EAX的值存储到[EDI]指定的内存单元  
+`stos byte ptr es:[edi]`  简写STOSB  
+`stos word ptr es:[edi]`  简写STOSW  
+`stos dword ptr es:[edi]` 简写STOSD  
+rep可配合stos使用，用于堆栈的操作。  
+- rep能够引发其后的字符串指令被重复，只要ECX不为0，重复就继续。  
+每一次执行字符串指令之后，ECX的值都会减小。  
+- 标志寄存器D位可以改变EDI的增长方向：DF为0则加，DF为1则减。  
 
-## 逻辑运算
-- ##### AND: 逻辑与
- - 转换为二进制，两个对应位都为1时，结果的对应位才为1，否则为0；
- - 该指令会置 CF=OF=0;其结果影响SF、ZF、PF。
- - 指令格式:`AND r/m,r/m/i`
- ** 运用例子**：
-   1.将特定的位清零
-   2.将字母转大写（因为大小写字幕只有第五位不同）
+## 逻辑运算  
+- ##### AND: 逻辑与  
+ - 转换为二进制，两个对应位都为1时，结果的对应位才为1，否则为0；  
+ - 该指令会置 CF=OF=0;其结果影响SF、ZF、PF。    
+ - 指令格式:`AND r/m,r/m/i`  
+ ** 运用例子**：  
+   1.将特定的位清零  
+   2.将字母转大写（因为大小写字幕只有第五位不同）  
    
 - ##### OR: 逻辑或
  - 转换为二进制，两个对应位有一个为1时，结果的对应位为1，否则为0；
- - 该指令会置 CF=OF=0; 其结果影响 SF、ZF、PF；
- - 指令格式:`OR r/m, r/m/i`
+ - 该指令会置 CF=OF=0; 其结果影响 SF、ZF、PF；  
+ - 指令格式:`OR r/m, r/m/i`  
 ** 运用例子**
    1.确保特定位为1
    2.将字母转大写（因为大小写字幕只有第小位不同）
@@ -129,12 +129,12 @@ rep可配合stos使用，用于堆栈的操作。
    - 最后两个可以作出这种判断的原因是，溢出的本质问题：
      - 两数同为正，相加，值为负，则说明溢出
      - 两数同为负，相加，值为正，则说明溢出
-     - 故有，正正得负则溢出，负负得正则溢出
+     - 故有，正正得负则溢出，负负得正则溢出  
 - ##### 跳转指令
   -  跳转指令分三类：
-  1.无条件跳转：JMP
-  2.根据CX、ECX寄存器的值跳转：JCXZ（CX为0则跳转）、JECXZ（ECX为0则跳转）
-  3.根据EFLAGS寄存器的标志位跳转，列表如下：
+  1.无条件跳转：JMP  
+  2.根据CX、ECX寄存器的值跳转：JCXZ（CX为0则跳转）、JECXZ（ECX为0则跳转）  
+  3.根据EFLAGS寄存器的标志位跳转，列表如下：  
 
 
 
@@ -181,8 +181,8 @@ mov al,bh			;将bh内容送入al
 ```
 思考此时EAX的内容是多少?
 ![](https://github.com/WithWindLuo/ctf_web/blob/master/src/register.jpg?raw=true)
-`mov eax,0a1234h`   EAX=000a1234h;
-`mov bx,ax`         BX=1234h;
-`mov ah,bl`         AH=34h;
-`mov al,bh`         AL=BH=12h;
+`mov eax,0a1234h`   EAX=000a1234h;  
+`mov bx,ax`         BX=1234h;  
+`mov ah,bl`         AH=34h;  
+`mov al,bh`         AL=BH=12h;  
 所以最后**EAX=000a3412h**
