@@ -1,0 +1,15 @@
+把寄存器全部设置成0的状态，然后执行下面的代码：
+
+mov eax,0a1234h			;将十六进制数0a1234h送入eax
+mov bx,ax			;将ax内容送入bx
+mov ah,bl			;将bl内容送入ah
+mov al,bh			;将bh内容送入al
+思考此时EAX的内容是多少？
+解：
+mov eax,0a1234h			;将十六进制数0a1234h送入eax  ,此时ah的值为12h,al的值为34h
+mov bx,ax			;将ax内容送入bx
+此时bh的值为12h,bl的值为34h
+mov ah,bl    ;此时AH的值为34h
+mov al,bh    ;此时al的值为12h
+
+则此时EAX的值为a3412h
