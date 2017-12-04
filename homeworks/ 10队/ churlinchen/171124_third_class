@@ -1,0 +1,72 @@
+###二进制第三次任务
+**操作内存**
+指令：mov  ax,[0]
+解析：中括号中的数表示偏移量，在实模式中将ds:0中的那个字装入ax中。
+（疑惑：0是内存中的地址还是相对于当前访问内存的相对地址）
+同样，mov  [0],ax          mov指令也可以把数据保存到内存中。
+**描述内存宽度的操作符**
+操作符：byte ptr    一个字节（8-bit,1byte)
+               word ptr   一个字  （16-bit)
+               dword  ptr   一个双字 （32-bit)
+例：
+mov  word prt  [100h],01234h
+即将1234h以字保存到DS:100h处
+**串操作**
+串操作就是由CPU去完成某一数量的重复的内存操作。
+例：
+mov cx,512			;循环次数
+NextByte:	mov al,ds:[si]
+			mov es:[si],al
+			inc si
+			inc di
+			loop NextByte
+	即将DS:SI处的连续512字节内容复制到ES:DI.
+DF:执行某些串操作指令时（比如lodsb，cmpsb）的方向标志： 当其为0时，si、di寄存器自动递增；当其为1时，si、di寄存器自动递减。
+	
+某些指令可以加上REP前缀，这些指令通常被叫做串操作指令。（rep是字符串操作指令MOVS,CMPS等的前缀,在CX不等于0的情况下,对字符串执行重复操作.）
+ 操作码	指令	                    说明
+F3 6C	REP INS r/m8,DX	将 (E)CX个字节从端口输入到ES:[(E)DI]
+F3 6D	REP INS r/m16,DX	将 (E)CX 个字从端口 DX 输入到 ES:[(E)DI]
+F3 6D	REP INS r/m32,DX	将 (E)CX 个双字从端口 DX 输入到 ES:[(E)DI]
+F3 A4	REP MOVS m8,m8	将 (E)CX 个字节从 DS:[(E)SI] 移到 ES:[(E)DI]
+F3 A5	REP MOVS m16,m16	将 (E)CX 个字从 DS:[(E)SI] 移到 ES:[(E)DI]
+F3 A5	REP MOVS m32,m32	将 (E)CX 个双字从 DS:[(E)SI] 移到 ES:[(E)DI]
+F3 6E	REP OUTS DX,r/m8	将 (E)CX 个字节从 DS:[(E)SI] 输出到端口 DX
+F3 6F	REP OUTS DX,r/m16	将 (E)CX 个字从 DS:[(E)SI] 输出到端口 DX
+F3 6F	REP OUTS DX,r/m32	将 (E)CX 个双字从 DS:[(E)SI] 输出到端口 DX
+F3 AC	REP LODS AL	将 (E)CX 个字节从 DS:[(E)SI] 加载到 AL
+F3 AD	REP LODS AX	将 (E)CX 个字从 DS:[(E)SI] 加载到 AX
+F3 AD	REP LODS EAX	将 (E)CX 个双字从 DS:[(E)SI] 加载到 EAX
+F3 AA	REP STOS m8	使用 AL 填写位于 ES:[(E)DI] 的 (E)CX 个字节
+F3 AB	REP STOS m16	使用 AX 填写位于 ES:[(E)DI] 的 (E)CX 个字
+F3 AB	REP STOS m32	使用 EAX 填写位于 ES:[(E)DI] 的 (E)CX 个双字
+F3 A6	REPE CMPS m8,m8	在 ES:[(E)DI] 与 DS:[(E)SI] 中查找不匹配的字节
+F3 A7	REPE CMPS m16,m16	在 ES:[(E)DI] 与 DS:[(E)SI] 中查找不匹配的字
+F3 A7	REPE CMPS m32,m32	在 ES:[(E)DI] 与 DS:[(E)SI] 中查找不匹配的双字
+F3 AE	REPE SCAS m8	从 ES:[(E)DI] 开始查找非 AL 字节
+F3 AF	REPE SCAS m16	从 ES:[(E)DI] 开始查找非 AX 字
+F3 AF	REPE SCAS m32	从 ES:[(E)DI] 开始查找非 EAX 双字
+F2 A6	REPNE CMPS m8,m8	在 ES:[(E)DI] 与 DS:[(E)SI] 中查找匹配字节
+F2 A7	REPNE CMPS m16,m16	在 ES:[(E)DI] 与 DS:[(E)SI] 中查找匹配字
+F2 A7	REPNE CMPS m32,m32	在 ES:[(E)DI] 与 DS:[(E)SI] 中查找匹配双字
+F2 AE	REPNE SCAS m8	从 ES:[(E)DI] 开始查找 AL
+F2 AF	REPNE SCAS m16	从 ES:[(E)DI] 开始查找 AX
+F2 AF	REPNE SCAS m32	从 ES:[(E)DI] 开始查找 EAX
+
+
+**重复指令的类型和终止条件**
+类型：REP（重复）、REPE（相等时重复）、REPNE（不相等时重复）、REPZ（为零时重复）及 REPNZ（不为零时重复）
+
+前缀：REP 前缀可以添加到 INS、OUTS、MOVS、LODS 及 STOS 指令，REPE、REPNE、REPZ 及 REPNZ 前缀可以添加到 CMPS 与 SCAS 指令。
+
+终止条件：
+重复前缀	          终止条件1	        终止条件2
+REP          	     ECX=0    	            无
+REPE/REPZ	      ECX=0	               ZF=0
+REPNE/REPNZ	      ECX=0	           ZF=1
+
+将上述程序改写为：
+cld			;复位DF
+mov cx,128		;512/4=128，共128个双字
+rep movsd
+ 
