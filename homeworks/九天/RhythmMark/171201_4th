@@ -1,0 +1,17 @@
+---
+作业
+
+---
+设EAX为00001111h，EBX为00002222h，请交换两个寄存器的值。 要求：不允许使用xchg和mov指令
+
+---
+解：
+
+1. push eax
+2. push ebx
+3. and eax,0
+4. and ebx,o
+5. pop eax
+6. pop ebx
+
+

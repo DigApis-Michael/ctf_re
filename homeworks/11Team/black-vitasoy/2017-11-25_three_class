@@ -1,0 +1,12 @@
+## 操作内存
+	mov ax,[0] 0代表的是偏移量,DS:0中的字装入AX
+1. byte ptr 8 bit
+2. word ptr 16 bit
+3. dword ptr 32 bit
+
+	mov word ptr [100h],01234h
+	mov ax,[bx+10]
+## 将DS:SI处的连续512字节内容复制到ES:DI
+	cld //复位DF
+	mov cx,128 //128 * 4 = 512
+	rep movesd //重复知道寄存器ECX的计数减到零
