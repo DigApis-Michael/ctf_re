@@ -1,0 +1,37 @@
+ 堆栈
+ 基本概念：FILO(Fist in Last Out--先进后出)
+注意:系统堆栈不仅仅是一段内存，详见链接堆栈与内存的关系
+堆栈相关指令：
+push，pop，INT,CALL,LEAVE,RET,TETE,IRET
+	Ø push寄存器:将一个寄存器中的数据压入堆栈
+       例如: 
+       push ax			;将ax中的数据入栈
+	Ø pop寄存器;将栈顶的数据弹出堆栈，并传入指定的寄存器
+        pop ax			;将堆栈栈顶的数据弹出并传送给ax
+	Ø push 段寄存器：将一个段寄存器中的数据压入堆栈
+	push ds
+	Ø pop 段寄存器：将栈顶表示的数据弹出，并传入端寄存器。
+        pop ds
+	Ø push 内存单元：将一个内存单元处的数据压入堆栈 
+        push [0]			;将DS:[0]的数据压入堆栈
+	Ø pop 内存单元：将栈顶表示的数据弹出，并传入内存单元。
+        pop [0]			;将栈顶数据弹出，并传入DS:[0]
+注意:8086CPU的入栈和出栈都是以字为单元的
+POP／PUSH操作
+	• PUSH EAX： 
+	
+	在我们执行了push操作之后，栈顶变为了0021f7b8，而这个地址对应的数据为00000000(h)。
+	• MOV ECX,1234h: 
+	
+	• POP ECX: 
+	
+	注意ECX值的变化。通过mov指令，我们给ECX传入了0x1234h，但是通过pop指令，我们将栈顶的EAX的值，弹出了堆栈，并且传递给了ECX，同时ESP栈顶+4变为了push eax之前的地址
+作业
+设EAX为00001111h，EBX为00002222h，请交换两个寄存器的值。 要求：不允许使用xchg和mov指令
+
+push eax
+push ebx
+and eax,0
+and ebx,o
+pop eax
+pop ebx
