@@ -1,0 +1,73 @@
+汇编语言中的整数常量表示：
+	Ø 十进制整数(decimal)：      1234
+	Ø 十六进制数(hexadecimal)：0[十六进制数]h 或者0[十六进制数]H,如果第一位为数        字，则开头的o可省略           7fffh、0ffffh.
+	Ø 二进制数(binary)： 1010110b 或者 1010110B
+	Ø 八进制数(octal):       777q、777Q、777o、777O
+简单指令:
+	Ø   mov(move to的缩写)指令：将数据发送到寄存器中
+	mov reg32,(reg32 | imm8 | imm16 | imm32)
+mov reg16,(reg16 | imm8 | imm16)
+mov reg8,(reg8 | imm8)
+例如：
+mov eax,ebx			;ebx内容送入eax
+mov ecx,ebx			;edx内容送入ecx
+	mov eax,010h表示在EAX寄存器中载入00000010h。
+	Ø xchg指令(exchange的缩写)
+	xchg reg32,reg32
+xchg reg16,reg16
+xchg reg8,reg8
+例如：
+xchg ebx,ecx，表示ebx与ecx的数值被交换。
+	Ø add指令(addition的缩写)
+	Ø lea指令(lean 的缩写)指令：将一个近地址指针写入到指定的寄存器
+	lea reg16,mem16
+	例如：
+lea ax,buf			;将存储器buf所指的地址传送给ax
+	其中，reg16必须是一个16位的通用寄存器，mem16必须是一个存储器。执行完这个指令后，就讲mem16所指的16位偏移地址传送到了reg16中。
+  注意： MOV指令传送的是地址所指的内容，而LEA只是传地
+	Ø rep(repeat的缩写):重复上面的指令;ecx：重复次数
+	Ø stos(store string的缩写)指令:
+	例如:
+	lea edi,[ebp-0C0h]
+mov ecx,30h
+mov eax,0CCCCCCCCh
+rep stos dword ptr es:[edi]
+		1. REP指令可以是任何字符串指令（CMPS、LODS、MOVS、SCAS、STOS）的前缀。 REP能够引发其后的字符串指令被重复，只要ECX的值不为0，重复就会继续。每一次字符串指令执行后，ECX的值都会减小。
+		2. STOS(store into string)意思是把EAX的内容拷贝到一个目的地址。 用法：stos dst，dst是一个目的地址，例如stos dword ptr es:[edi]。dword ptr（强制转换成dword格式）前缀是告诉stos，一次拷贝双字（4个字节）到目的地址
+	逻辑运算：汇编语言指令详解
+	运算指令:AND, OR, XOR, TEST, NOT
+	标志位:CF、PF、AF、ZF、OF
+	Ø cmp(compare的缩写)：比较两个操作数的大小，实际运行为第一个操作数减去第二个操作数，但不会影响两个操作数的值
+	Ø 跳转指令:1.无条件跳转:JMP（jump的缩写）
+	               2.根据CX、ECX寄存器的值跳转:
+	               JCXZ  (jump when CX is zero )
+	               JECXZ(jump when ECX is zero）
+	               3.根据EFLAGS寄存器的标志位跳转，列表如下
+	
+实模式与保护模式:进入保护模式下，发挥更强大的功能
+练习:
+把寄存器全部设置成0的状态，然后执行下面的代码：
+
+mov eax,0a1234h			;将十六进制数0a1234h送入eax
+mov bx,ax			;将ax内容送入bx
+mov ah,bl			;将bl内容送入ah
+mov al,bh			;将bh内容送入al
+
+
+将十六进制转换为二进制数
+0a1234h->0000 0000 0000 1010 0001 0010 0011 0100b
+1.mov eax,0a1234h
+此时，eax的值为：0000 0000 0000 1010 0001 0010 0011 0100
+2.mov bx,ax
+bx=ax=0001 0010 0011 0100b
+此时，eax的值为:0000 0000 0000 1010 0001 0010 0011 0100
+      ebx的值为:0000 0000 0000 0000 0001 0010 0011 0100
+3.mov ah,bl
+ah=bl=0011 0100b
+此时，eax的值为:0000 0000 0000 1010 0011 0100 0011 0100
+      ebx的值为:0000 0000 0000 0000 0001 0010 0011 0100
+4.mov al,bh
+al=bh=0001 0010b
+此时，eax的值为:0000 0000 0000 1010 0011 0100 0001 0010
+      ebx的值为:0000 0000 0000 0000 0001 0010 0011 0100
+5.总结以上，可得EAC最终的内容为a3412
